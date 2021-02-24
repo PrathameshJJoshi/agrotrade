@@ -10,6 +10,7 @@ const scheme = require('./models/scheme')
 const farm = require('./models/farm')
 const farm_type = require('./models/farm_type')
 const comment = require('./models/comment')
+const history = require('./models/history')
 const jwt = require('jsonwebtoken')
 const {jwtkey} = require('./config/keys')
 var http = require('http');
@@ -166,16 +167,16 @@ app.post('/addcomment', async (req, res) => {
 }); 
 
 
-// app.post('/sitemaster', async (req, res) => {
-//   let { name , address	, contact_person, contact_number, status } = req.body;
-//   try{
-//     const con = new site_masters({ name , address	, contact_person, contact_number, status });
-//     await  con.save();
-//     res.send("Success")
-//   }catch(err){
-//     return res.status(422).send(err.message)
-//   }
-// }); 
+app.post('/addhistory', async (req, res) => {
+  let { user_id , date	, product_list, amount, razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
+  try{
+    const con = new history({ user_id , date	, product_list, amount, razorpay_payment_id, razorpay_order_id, razorpay_signature });
+    await  con.save();
+    res.send("Success")
+  }catch(err){
+    return res.status(422).send(err.message)
+  }
+}); 
 
 
 app.post('/allcrops',async (req,res)=>{
@@ -279,6 +280,17 @@ app.post('/allcomments',async (req,res)=>{
 
 app.delete('/removeitem', async (req, res, next) => {
     let book = await cart.findOne({where: {id: req.body.id}}).catch(e => {
+       console.log(e.message)
+    })
+    if (!book){
+      console.log("err");
+    }
+    book.destroy();
+    res.send("Success");
+  });
+
+app.delete('/removeitems', async (req, res, next) => {
+    let book = await cart.findAll({where: {id: req.body.id}}).catch(e => {
        console.log(e.message)
     })
     if (!book){
