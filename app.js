@@ -168,9 +168,9 @@ app.post('/addcomment', async (req, res) => {
 
 
 app.post('/addhistory', async (req, res) => {
-  let { user_id , date	, product_list, amount, razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
+  let { user_id , date	, product_list, amount, razorpay_paymentid } = req.body;
   try{
-    const con = new history({ user_id , date	, product_list, amount, razorpay_payment_id, razorpay_order_id, razorpay_signature });
+    const con = new history({ user_id , date	, product_list, amount, razorpay_paymentid });
     await  con.save();
     res.send("Success")
   }catch(err){
@@ -208,6 +208,26 @@ app.post('/allcarts',async (req,res)=>{
       // }
       try{
         const use = await cart.findAll({ where: { user_id:user_id } })
+        // use.push(one)
+        res.send(use)
+        console.log(use)
+        // return use
+      }catch(err){
+        return res.send(err)
+    }
+    // res.send(use)
+  })
+
+
+app.post('/allhistory/:id',async (req,res)=>{
+    // const {user_id} = req.body
+    // const use=[];
+    // console.log(user_id)
+    // if(!use){
+      //   return res.status(422).send({error :"must provide username or password2"})
+      // }
+      try{
+        const use = await history.findAll({ where: { user_id:req.params.id } })
         // use.push(one)
         res.send(use)
         console.log(use)
@@ -289,15 +309,19 @@ app.delete('/removeitem', async (req, res, next) => {
     res.send("Success");
   });
 
-app.delete('/removeitems', async (req, res, next) => {
-    let book = await cart.findAll({where: {id: req.body.id}}).catch(e => {
-       console.log(e.message)
-    })
-    if (!book){
-      console.log("err");
+app.delete('/deleteitems', async (req, res, next) => {
+  // console.log(req.body.id)
+  try{
+    for ( var i = 0; i < req.body.id.length; i++){
+    const use = await cart.destroy({ where: { id: [req.body.id[i]] } })
     }
-    book.destroy();
-    res.send("Success");
+    // use.push(one)
+    res.send("Success")
+    // console.log(use)
+    // return use
+  }catch(err){
+    return res.send(err)
+}
   });
 
 // const port = process.env.PORT;

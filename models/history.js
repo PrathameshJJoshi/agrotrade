@@ -4,7 +4,7 @@ const db = require('../config/database');
 
 const history = db.define('history', {
   user_id: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   },
   date: {
     type: Sequelize.DATEONLY
@@ -13,16 +13,10 @@ const history = db.define('history', {
     type: Sequelize.STRING
   },
   amount: {
-    type: Sequelize.STRING
+    type: Sequelize.INTEGER
   },
-  razorpay_payment_id: {
+  razorpay_paymentid: {
     type: Sequelize.STRING
-  },
-  razorpay_order_id: {
-    type: Sequelize.STRING
-  },
-  razorpay_signature: {
-    type: Sequelize.TEXT
   }
 });
 
