@@ -17,7 +17,7 @@ const crop = db.define('crop', {
   },
   type: {
     type:   Sequelize.ENUM,
-    values: ['Crop ','Fruit','Vegitable','Meat']
+    values: ['Grain ','Fruit','Vegitable','Meat']
   },
   name: {
     type: Sequelize.STRING
@@ -29,7 +29,7 @@ const crop = db.define('crop', {
     type: Sequelize.STRING
   },
   image: {
-    type: Sequelize.STRING
+    type: Sequelize.TEXT
   },
 });
 

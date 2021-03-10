@@ -11,6 +11,7 @@ const farm = require('./models/farm')
 const farm_type = require('./models/farm_type')
 const comment = require('./models/comment')
 const history = require('./models/history')
+const message = require('./models/message');
 const jwt = require('jsonwebtoken')
 const {jwtkey} = require('./config/keys')
 var http = require('http');
@@ -179,6 +180,18 @@ app.post('/addhistory', async (req, res) => {
 }); 
 
 
+app.post('/addmessage', async (req, res) => {
+  let { user_id , another_id, messages } = req.body;
+  try{
+    const con = new message({ user_id , another_id, messages });
+    await  con.save();
+    res.send("Success")
+  }catch(err){
+    return res.status(422).send(err.message)
+  }
+}); 
+
+
 app.post('/allcrops',async (req,res)=>{
     const {type} = req.body
     // const use=[];
@@ -219,15 +232,15 @@ app.post('/allcarts',async (req,res)=>{
   })
 
 
-app.post('/allhistory/:id',async (req,res)=>{
-    // const {user_id} = req.body
+app.post('/allhistory',async (req,res)=>{
+    const {user_id} = req.body
     // const use=[];
     // console.log(user_id)
     // if(!use){
       //   return res.status(422).send({error :"must provide username or password2"})
       // }
       try{
-        const use = await history.findAll({ where: { user_id:req.params.id } })
+        const use = await history.findAll({ where: { user_id:user_id } })
         // use.push(one)
         res.send(use)
         console.log(use)
@@ -323,6 +336,46 @@ app.delete('/deleteitems', async (req, res, next) => {
     return res.send(err)
 }
   });
+
+
+  app.post('/messagesu',async (req,res)=>{
+    const {user_id,another_id} = req.body
+    // const use=[];
+    // console.log(blog_id)
+    // if(!use){
+      //   return res.status(422).send({error :"must provide userblog_id or password2"})
+      // }
+      try{
+        const use = await message.findAll({ where: { user_id:user_id , another_id:another_id } })
+        // use.push(one)
+        res.send(use)
+        console.log(use)
+        // return use
+      }catch(err){
+        return res.send(err)
+    }
+    // res.send(use)
+  })
+
+
+  app.post('/messagesa',async (req,res)=>{
+    const {user_id,another_id} = req.body
+    // const use=[];
+    // console.log(blog_id)
+    // if(!use){
+      //   return res.status(422).send({error :"must provide userblog_id or password2"})
+      // }
+      try{
+        const use = await message.findAll({ where: { user_id:user_id , another_id:another_id } })
+        // use.push(one)
+        res.send(use)
+        console.log(use)
+        // return use
+      }catch(err){
+        return res.send(err)
+    }
+    // res.send(use)
+  })
 
 // const port = process.env.PORT;
 
